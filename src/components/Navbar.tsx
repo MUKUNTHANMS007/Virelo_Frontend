@@ -1,0 +1,102 @@
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
+
+interface NavbarProps {
+  onNavigate: (page: string) => void;
+}
+
+export default function Navbar({ onNavigate }: NavbarProps) {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const navLinks = [
+    { label: 'Products', id: 'products' },
+    { label: 'Docs', id: 'docs' },
+    { label: 'News', id: 'news' },
+    { label: 'About Us', id: 'about' }
+  ];
+
+  return (
+    <header 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'glass py-4' : 'bg-transparent py-6'}`}
+    >
+      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        {/* Logo */}
+        <div 
+          className="flex items-center gap-2 cursor-pointer z-50"
+          onClick={() => onNavigate('home')}
+        >
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center">
+             <div className="w-4 h-4 bg-white rounded-sm" />
+          </div>
+          <span className="font-bold text-xl tracking-tight text-neutral-900">TemporalAI</span>
+        </div>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center gap-8 bg-white/50 px-6 py-2 rounded-full border border-neutral-200/50 backdrop-blur-md shadow-sm">
+          {navLinks.map((link) => (
+            <button
+              key={link.id}
+              onClick={() => onNavigate(link.id)}
+              className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors"
+            >
+              {link.label}
+            </button>
+          ))}
+        </nav>
+
+        {/* CTA Buttons */}
+        <div className="hidden md:flex items-center gap-4">
+          <button className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors px-4 py-2">
+            Sign In
+          </button>
+          <button className="text-sm font-medium bg-neutral-900 text-white hover:bg-neutral-800 px-5 py-2.5 rounded-full transition-colors shadow-sm">
+            Get Started
+          </button>
+        </div>
+
+        {/* Mobile Menu Toggle */}
+        <button 
+          className="md:hidden text-neutral-900 z-50"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-neutral-200 p-6 flex flex-col gap-6 shadow-xl"
+        >
+          {navLinks.map((link) => (
+            <button
+              key={link.id}
+              onClick={() => {
+                onNavigate(link.id);
+                setIsMobileMenuOpen(false);
+              }}
+              className="text-lg font-medium text-neutral-600 hover:text-neutral-900 text-left transition-colors"
+            >
+              {link.label}
+            </button>
+          ))}
+          <div className="w-full h-px bg-neutral-200 my-2" />
+          <button className="text-lg font-medium text-neutral-900 text-left">Sign In</button>
+          <button className="text-lg font-medium bg-neutral-900 text-white text-center py-3 rounded-xl shadow-md">Get Started</button>
+        </motion.div>
+      )}
+    </header>
+  );
+}
