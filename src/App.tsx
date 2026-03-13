@@ -1,33 +1,82 @@
-import { useState } from 'react';
-import Navbar from './components/Navbar';
+import { useState, useEffect } from 'react';
+import { NavBar } from './components/ui/tubelight-navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Docs from './pages/Docs';
 import News from './pages/News';
 import Products from './pages/Products';
+import Projects from './pages/Projects';
+import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
+import Editor from './pages/Editor';
+import { useAuthStore } from './store/authStore';
+import { Home as HomeIcon, Package, FileText, Newspaper, Users, LogIn, LogOut, LayoutDashboard, FolderOpen } from 'lucide-react';
 
 export default function App() {
   const [activePage, setActivePage] = useState('products');
+  const { isAuthenticated, fetchMe, logout, user } = useAuthStore();
+
+  // Restore session on mount
+  useEffect(() => {
+    fetchMe();
+  }, [fetchMe]);
+
+  const handleLogout = () => {
+    logout();
+    setActivePage('products');
+  };
+
+  const handleNavigation = (page: string) => {
+    if (page === 'logout') {
+      handleLogout();
+      return;
+    }
+    setActivePage(page);
+  };
+
+  const navItems = [
+    { name: 'Home', id: 'home', icon: HomeIcon },
+    { name: 'Products', id: 'products', icon: Package },
+    { name: 'Docs', id: 'docs', icon: FileText },
+    { name: 'Editor', id: 'editor', icon: LayoutDashboard },
+    { name: 'Projects', id: 'projects', icon: FolderOpen },
+    { name: 'News', id: 'news', icon: Newspaper },
+    { name: 'About', id: 'about', icon: Users },
+    ...(isAuthenticated
+      ? [{ name: 'Logout', id: 'logout', icon: LogOut }]
+      : [{ name: 'Login', id: 'signin', icon: LogIn }]),
+  ];
 
   const renderContent = () => {
     switch (activePage) {
       case 'home': return <Home />;
       case 'docs': return <Docs />;
+      case 'editor': return <Editor />;
       case 'news': return <News />;
       case 'products': return <Products />;
+      case 'projects': return <Projects onNavigate={setActivePage} />;
+      case 'signin': return <SignIn onNavigate={setActivePage} />;
+      case 'signup': return <SignUp onNavigate={setActivePage} />;
       default: return <Home />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-blue-500/30">
-      {/* Pass the state setter to Navbar so it can change pages */}
-      <Navbar onNavigate={setActivePage} />
+    <div className="min-h-screen bg-white text-neutral-900 selection:bg-indigo-500/30">
+      <NavBar items={navItems} onNavigate={handleNavigation} activePage={activePage} />
 
-      <main className="pt-24 min-h-screen">
+      {/* Auth indicator */}
+      {isAuthenticated && user && activePage !== 'editor' && (
+        <div className="fixed top-4 right-6 z-50 flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-md border border-neutral-200 rounded-full shadow-sm">
+          <div className="w-2 h-2 rounded-full bg-green-500" />
+          <span className="text-xs font-medium text-neutral-600">{user.name}</span>
+        </div>
+      )}
+
+      <main className="pt-20 min-h-screen">
         {renderContent()}
       </main>
-      <Footer />
+      {activePage !== 'editor' && <Footer />}
     </div>
   );
 }

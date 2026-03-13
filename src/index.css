@@ -30,7 +30,7 @@
 
 @layer utilities {
   .glass {
-    @apply bg-white/70 backdrop-blur-md border border-black/5;
+    @apply bg-white/50 backdrop-blur-md border border-white/20 shadow-lg;
   }
   .glass-card {
     @apply bg-temporal-surface border border-temporal-border hover:border-black/10 hover:shadow-lg transition-all duration-300 rounded-2xl;
@@ -52,6 +52,14 @@
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
+  }
+  .custom-leva-wrapper > div {
+    margin: 0 !important;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.7) !important;
   }
 }
 

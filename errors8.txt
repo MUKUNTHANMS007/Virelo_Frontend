@@ -1,0 +1,10 @@
+﻿src/components/editor/EditorCanvas.tsx(2,31): error TS6133: 'Environment' is declared but its value is never read.
+src/components/editor/KeyframeObject.tsx(2,1): error TS6133: 'useFrame' is declared but its value is never read.
+src/components/editor/KeyframeObject.tsx(5,26): error TS1484: 'KeyframeData' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/components/editor/KeyframeObject.tsx(27,9): error TS6133: 'handlePointerMissed' is declared but its value is never read.
+src/components/editor/KeyframeObject.tsx(27,32): error TS6133: 'e' is declared but its value is never read.
+src/components/Navbar.tsx(1,8): error TS6133: 'React' is declared but its value is never read.
+src/components/ui/tubelight-navbar.tsx(1,8): error TS6133: 'React' is declared but its value is never read.
+src/pages/Docs.tsx(6,3): error TS6133: 'Terminal' is declared but its value is never read.
+src/pages/Docs.tsx(11,3): error TS6133: 'Settings' is declared but its value is never read.
+src/pages/Docs.tsx(13,11): error TS6133: 'CodeIcon' is declared but its value is never read.
