@@ -29,7 +29,7 @@ export default function SignUp({ onNavigate }: SignUpProps) {
       <div className="relative z-10 w-full max-w-md p-8 bg-white/60 backdrop-blur-xl border border-neutral-200 rounded-3xl shadow-xl shadow-neutral-200/50">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-neutral-900 mb-2 tracking-tight">Create an account</h1>
-          <p className="text-neutral-500">Join TemporalAI to start creating</p>
+          <p className="text-neutral-500">Join Virelo to start creating</p>
         </div>
 
         <div className="space-y-6">

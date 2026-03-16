@@ -1,26 +1,30 @@
+import { useAuthStore } from '../store/authStore';
 import { ImageCarouselHero } from '../components/ai-image-generator-hero';
+import cinarizationArt from '../assets/cinarization_line_art.png';
 
-const Home = () => {
+const Home = ({ onNavigate }: { onNavigate?: (page: string) => void }) => {
+  const { isAuthenticated } = useAuthStore();
   const images = [
-    { id: '1', src: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=600', alt: 'Temporal Transition 1', rotation: -5 },
-    { id: '2', src: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&q=80&w=600', alt: 'Motion Synth', rotation: 8 },
-    { id: '3', src: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&q=80&w=600', alt: 'Temporal AI', rotation: -3 },
-    { id: '4', src: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=600', alt: 'Coherence', rotation: 5 },
-    { id: '5', src: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=600', alt: 'Tech', rotation: -2 },
+    { id: '1', src: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=600', alt: '3D Character Posing', rotation: -5 },
+    { id: '2', src: cinarizationArt, alt: 'Cinarization Line Art', rotation: 8 },
+    { id: '3', src: 'https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&q=80&w=600', alt: 'Dope Sheet Timeline', rotation: -3 },
+    { id: '4', src: 'https://images.unsplash.com/photo-1614728263952-84ea256f9679?auto=format&fit=crop&q=80&w=600', alt: 'Onion Skinning', rotation: 5 },
+    { id: '5', src: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=600', alt: 'Digital Reference Sheet', rotation: -2 },
   ];
 
   return (
     <div className="w-full">
       <ImageCarouselHero 
-        title="Unleash the Power of Temporal AI"
-        subtitle="Next-Gen Motion Synthesis"
-        description="Transform static frames into breathtaking cinematic transitions with the world's most advanced AI motion engine."
-        ctaText="Explore the Workspace"
+        title="Evolution of Animation: 2D Soul, 3D Precision"
+        subtitle="Hybrid 2D/3D Animation Pipeline"
+        description="Bridge the gap between 3D modeling and hand-drawn aesthetics. Capture poses, apply Cinarization filters, and trigger AniDoc interpolation for fluid character motion."
+        ctaText={isAuthenticated ? "Enter Workspace" : "Get Started Now"}
+        onCtaClick={() => onNavigate?.(isAuthenticated ? 'projects' : 'signin')}
         images={images}
         features={[
-          { title: "Quantum Motion", description: "Zero-artifact frame interpolation at 4K resolution" },
-          { title: "Style Coherence", description: "Maintain visual identity across complex scene morphs" },
-          { title: "Real-time Synthesis", description: "Generate production-ready video in seconds" }
+          { title: "AniDoc Integration", description: "Automated correspondence matching for smooth 2D/3D hybrids." },
+          { title: "Industry Formats", description: "Native .PSD and .CLIP metadata support for design layers." },
+          { title: "Pro Animation Tools", description: "Real-time Onion Skinning and Dope Sheet management." }
         ]}
       />
     </div>

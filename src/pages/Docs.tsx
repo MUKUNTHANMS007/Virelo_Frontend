@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ChevronRight, 
-  Box, 
-  Sun, 
-  Move, 
-  Download,
   Search,
   Menu,
   X,
-  Hammer,
   BookOpen
 } from 'lucide-react';
 
@@ -67,19 +62,19 @@ const Docs = () => {
   const navigation = [
     {
       title: 'Getting Started',
-      items: ['Introduction']
+      items: ['Introduction', 'Virelo Engine Workflow']
     },
     {
       title: 'Core Features',
-      items: ['Object Spawning', 'Transform Controls', 'Lighting']
+      items: ['Object Spawning', 'Transform Controls', 'Lighting', 'Managing the Workspace']
     },
     {
       title: 'Advanced',
-      items: ['Sculpting Tool']
+      items: ['Sculpting Tool', 'ToonCrafter AI Engine']
     },
     {
       title: 'Exporting',
-      items: ['Export to GLTF']
+      items: ['Export to GLTF', 'Layered PSD Export']
     }
   ];
 
@@ -95,16 +90,114 @@ const Docs = () => {
         return (
           <div className="space-y-6">
             <p className="text-lg text-neutral-600 leading-relaxed">
-              Welcome to the <strong>3D Animation Editor</strong>. This platform allows you to create fully realized 3D scenes directly in your browser without any prior installation or heavy software.
+              Welcome to <strong>Virelo (The Hybrid 2D/3D Animation Pipeline)</strong>. This platform allows you to create fully realized scenes directly in your browser without any prior installation or heavy software.
             </p>
             <p className="text-lg text-neutral-600 leading-relaxed">
               You can spawn primitive shapes, move them around the scene, adjust the lighting environment to cast accurate shadows, sculpt meshes organically, and export your final creation to be used anywhere.
             </p>
             <ImagePlaceholder 
               src="/docs/editor-overview.png" 
-              alt="Overview of the 3D Editor interface" 
+              alt="Overview of the Virelo interface" 
               caption="The main editor interface featuring the canvas, sidebars, and top navigation"
             />
+          </div>
+        );
+      case 'ToonCrafter AI Engine':
+        return (
+          <div className="space-y-8">
+            <div className="p-4 bg-indigo-50 border border-indigo-100 rounded-xl flex items-start gap-3">
+              <div className="w-2 h-2 mt-2 rounded-full bg-indigo-500 animate-pulse flex-shrink-0" />
+              <p className="text-indigo-800 font-medium text-sm leading-relaxed">
+                Virelo now uses <strong>ToonCrafter</strong> as its AI interpolation engine. ToonCrafter synthesises <strong>16 in-between frames</strong> from your start and end pose captures, producing smooth, stylised 2D animation directly from 3D scene data.
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-bold text-neutral-800 mb-4">What is ToonCrafter?</h2>
+              <p className="text-neutral-600 leading-relaxed">
+                <a href="https://github.com/Doubiiu/ToonCrafter" target="_blank" rel="noopener noreferrer" className="text-indigo-600 underline font-medium">ToonCrafter</a> is an open-source diffusion-based video interpolation model optimised for cartoon and animation styles. Given a start frame and an end frame, it generates temporally coherent in-between frames while preserving line-art characteristics.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-xl font-bold text-neutral-800 mb-4">How the Pipeline Works</h3>
+              <ul className="space-y-6">
+                {[
+                  { step: 1, title: 'Pose in 3D Workspace', desc: 'Arrange your scene in the Virelo editor. Use Onion Skinning to compare keyframes and build fluid motion arcs.' },
+                  { step: 2, title: 'Capture to Sketch', desc: 'Save your project. The editor captures the Three.js canvas, applies binarisation, and encodes the sketch as JSON.' },
+                  { step: 3, title: 'Upload Character Reference (Optional)', desc: 'Upload a .PSD or .CLIP character sheet and click "Personalize AI Model" to fine-tune ToonCrafter for your character.' },
+                  { step: 4, title: 'ToonCrafter Interpolation', desc: 'The Virelo ToonCrafter Worker receives your start and end sketches, runs 16-frame interpolation, and produces an MP4.' },
+                  { step: 5, title: 'Receive MP4 + Layered PSD', desc: 'Download the video or the fully layered PSD where every interpolated frame is a separate Photoshop layer.' },
+                ].map(({ step, title, desc }) => (
+                  <li key={step} className="flex gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">{step}</div>
+                    <div>
+                      <strong className="text-neutral-900 block mb-1">{title}</strong>
+                      <span className="text-neutral-600 leading-relaxed">{desc}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-xl font-bold text-neutral-800 mb-4">Technical Specs</h3>
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { label: 'Frames Produced', value: '16 per generation' },
+                  { label: 'Output FPS', value: '8 fps (default)' },
+                  { label: 'Resolution', value: '512×512 (Pro: 1280×720)' },
+                  { label: 'Worker Port', value: '8001 (FastAPI)' },
+                  { label: 'PSD Layers', value: 'One layer per frame' },
+                  { label: 'Freemium Limit', value: '5 generations / day' },
+                ].map(({ label, value }) => (
+                  <div key={label} className="p-4 rounded-xl border border-neutral-100 bg-neutral-50">
+                    <p className="text-xs font-black text-neutral-400 uppercase tracking-widest mb-1">{label}</p>
+                    <p className="text-neutral-900 font-semibold">{value}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-xl font-bold text-neutral-800 mb-3">Starting the Worker</h3>
+              <pre className="bg-neutral-900 text-emerald-400 rounded-xl p-5 text-sm overflow-x-auto font-mono leading-relaxed">{`cd virelo-tooncrafter-worker\npip install -r requirements.txt\npython main.py  # Starts on port 8001`}</pre>
+              <p className="text-sm text-neutral-500 mt-3 font-medium">
+                Without model weights, the worker uses high-quality sample videos as a fallback so your frontend pipeline stays fully functional during development.
+              </p>
+            </div>
+          </div>
+        );
+      case 'Virelo Engine Workflow':
+        return (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-neutral-800">Virelo Engine Workflow</h2>
+            <p className="text-lg text-neutral-600 leading-relaxed">
+              The Virelo engine empowers creators to bridge the gap between 3D space and 2D animation styles using our hybrid pipeline.
+            </p>
+            <ul className="space-y-6 my-8">
+              <li className="flex gap-4">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">1</div>
+                <div>
+                  <strong className="text-neutral-900 block mb-1">Pose in 3D</strong>
+                  <span className="text-neutral-600">Use the integrated workspace to establish spatial logic by posing 3D models. Enable the Onion Skinning (Ghosting) feature to see your previous keyframes and ensure smooth motion arcs.</span>
+                </div>
+              </li>
+              <li className="flex gap-4">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">2</div>
+                <div>
+                  <strong className="text-neutral-900 block mb-1">Capture Sketch</strong>
+                  <span className="text-neutral-600">Save your scene to automatically capture the posed 3D data into binarized sketches. This extracts the structural outlines needed for hand-drawn styles.</span>
+                </div>
+              </li>
+              <li className="flex gap-4">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">3</div>
+                <div>
+                  <strong className="text-neutral-900 block mb-1">AI Colorize</strong>
+                  <span className="text-neutral-600">Click the <strong>Generate Animation</strong> button. The AniDoc CVPR 2025 pipeline will automatically map your reference sheet's style and colors to the captured sketches, producing a fully rendered fluid sequence!</span>
+                </div>
+              </li>
+            </ul>
           </div>
         );
       case 'Object Spawning':
@@ -215,6 +308,63 @@ const Docs = () => {
             />
           </div>
         );
+      case 'Managing the Workspace':
+        return (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-neutral-800">Managing the Workspace</h2>
+            <p className="text-lg text-neutral-600 leading-relaxed">
+              Virelo provides a flexible, expansive environment and professional tools to keep your creative process smooth.
+            </p>
+            <div className="space-y-4 mt-6">
+              <div className="p-5 rounded-xl border border-neutral-200 bg-white shadow-sm flex gap-4">
+                <div className="mt-1 p-2 bg-indigo-50 text-indigo-600 rounded-lg h-fit border border-indigo-100">
+                  <BookOpen className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-neutral-800 text-base mb-1">Undo & Redo History</h3>
+                  <p className="text-sm text-neutral-600 leading-relaxed mb-3">
+                    Every mesh transformation (position, rotation, scale) and object addition/removal is tracked in a robust history stack.
+                  </p>
+                  <ul className="list-disc pl-5 text-sm text-neutral-600 space-y-1">
+                    <li><strong>Undo</strong>: Click the Undo button in the toolbar, or press <kbd className="font-mono bg-neutral-100 px-1 py-0.5 rounded border border-neutral-200 text-xs">Ctrl+Z</kbd></li>
+                    <li><strong>Redo</strong>: Click the Redo button in the toolbar, or press <kbd className="font-mono bg-neutral-100 px-1 py-0.5 rounded border border-neutral-200 text-xs">Ctrl+Y</kbd> (or <kbd className="font-mono bg-neutral-100 px-1 py-0.5 rounded border border-neutral-200 text-xs">Ctrl+Shift+Z</kbd>)</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div className="p-5 rounded-xl border border-neutral-200 bg-white shadow-sm flex gap-4">
+                <div className="mt-1 p-2 bg-indigo-50 text-indigo-600 rounded-lg h-fit border border-indigo-100">
+                  <Search className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-neutral-800 text-base mb-1">Removing Objects</h3>
+                  <p className="text-sm text-neutral-600 leading-relaxed mb-3">
+                    To delete an object from your scene, simply select it by left-clicking, then press the Delete Selected button in the toolbar or press <kbd className="font-mono bg-neutral-100 px-1 py-0.5 rounded border border-neutral-200 text-xs">Backspace</kbd> / <kbd className="font-mono bg-neutral-100 px-1 py-0.5 rounded border border-neutral-200 text-xs">Del</kbd> on your keyboard.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-xl border border-neutral-200 bg-white shadow-sm flex gap-4">
+                <div className="mt-1 p-2 bg-indigo-50 text-indigo-600 rounded-lg h-fit border border-indigo-100">
+                  <Menu className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-neutral-800 text-base mb-1">Navigating the Expanded Studio</h3>
+                  <p className="text-sm text-neutral-600 leading-relaxed">
+                    Virelo features an ultra-wide infinite grid and deep camera clipping planes, providing you immense space for sprawling cinematic environments.
+                    If you get lost, just click the <strong>Reset Camera</strong> (Home icon) button on the top toolbar to instantly return to the original default viewpoint.
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <ImagePlaceholder 
+              src="/docs/workspace-management.png" 
+              alt="Workspace overview highlighting the history and deletion tools" 
+              caption="Use the top toolbar for history and camera controls."
+            />
+          </div>
+        );
       case 'Sculpting Tool':
         return (
           <div className="space-y-6">
@@ -289,6 +439,37 @@ const Docs = () => {
               alt="Exporting the scene" 
               caption="Clicking the Export button bundles your composition into an optimized file instantly"
             />
+          </div>
+        );
+      case 'Layered PSD Export':
+        return (
+          <div className="space-y-6">
+            <p className="text-lg text-neutral-600 leading-relaxed">
+              For professional cleanup and frame-by-frame painting, export your AI sequences as layered PSD files. This preserves the individual frames generated by the Virelo engine as separate, editable layers.
+            </p>
+            <ul className="space-y-4 my-8">
+              <li className="flex gap-4">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">1</div>
+                <div>
+                  <strong className="text-neutral-900 block mb-1">Generate Animation</strong>
+                  <span className="text-neutral-600">Complete the standard AI generation workflow. The PSD option becomes available once the rendering status is successful.</span>
+                </div>
+              </li>
+              <li className="flex gap-4">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">2</div>
+                <div>
+                  <strong className="text-neutral-900 block mb-1">Select PSD Output</strong>
+                  <span className="text-neutral-600">In the completion overlay, click the "Download Layered PSD" button. This triggers the packaging of all 14 frames into a single document.</span>
+                </div>
+              </li>
+              <li className="flex gap-4">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">3</div>
+                <div>
+                  <strong className="text-neutral-900 block mb-1">External Cleanup</strong>
+                  <span className="text-neutral-600">Open the downloaded `.psd` file in Photoshop or Clip Studio Paint. Each layer represents a frame, allowing you to paint corrections or refine line art without losing the AI's temporal coherence.</span>
+                </div>
+              </li>
+            </ul>
           </div>
         );
       default:

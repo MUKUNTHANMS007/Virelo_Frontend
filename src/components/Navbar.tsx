@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LogOut, User } from 'lucide-react';
+import { useAuthStore } from '../store/authStore';
 
 interface NavbarProps {
   onNavigate: (page: string) => void;
@@ -9,6 +10,12 @@ interface NavbarProps {
 export default function Navbar({ onNavigate }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isAuthenticated, logout, user } = useAuthStore();
+
+  const handleLogout = () => {
+    logout();
+    onNavigate('home');
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,7 +45,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
           <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center">
              <div className="w-4 h-4 bg-white rounded-sm" />
           </div>
-          <span className="font-bold text-xl tracking-tight text-neutral-900">TemporalAI</span>
+          <span className="font-bold text-xl tracking-tight text-neutral-900">Virelo</span>
         </div>
 
         {/* Desktop Navigation */}
@@ -56,12 +63,39 @@ export default function Navbar({ onNavigate }: NavbarProps) {
 
         {/* CTA Buttons */}
         <div className="hidden md:flex items-center gap-4">
-          <button className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors px-4 py-2">
-            Sign In
-          </button>
-          <button className="text-sm font-medium bg-neutral-900 text-white hover:bg-neutral-800 px-5 py-2.5 rounded-full transition-colors shadow-sm">
-            Get Started
-          </button>
+          {isAuthenticated ? (
+            <>
+              <button 
+                onClick={handleLogout}
+                className="text-sm font-medium text-neutral-600 hover:text-red-600 transition-colors px-4 py-2 flex items-center gap-2"
+              >
+                <LogOut size={16} />
+                Sign Out
+              </button>
+              <button 
+                onClick={() => onNavigate('projects')}
+                className="text-sm font-medium bg-neutral-900 text-white hover:bg-neutral-800 px-5 py-2.5 rounded-full transition-colors shadow-sm flex items-center gap-2"
+              >
+                <User size={16} />
+                My Dashboard
+              </button>
+            </>
+          ) : (
+            <>
+              <button 
+                onClick={() => onNavigate('signin')}
+                className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors px-4 py-2"
+              >
+                Sign In
+              </button>
+              <button 
+                onClick={() => onNavigate('signup')}
+                className="text-sm font-medium bg-neutral-900 text-white hover:bg-neutral-800 px-5 py-2.5 rounded-full transition-colors shadow-sm"
+              >
+                Get Started
+              </button>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -93,8 +127,59 @@ export default function Navbar({ onNavigate }: NavbarProps) {
             </button>
           ))}
           <div className="w-full h-px bg-neutral-200 my-2" />
-          <button className="text-lg font-medium text-neutral-900 text-left">Sign In</button>
-          <button className="text-lg font-medium bg-neutral-900 text-white text-center py-3 rounded-xl shadow-md">Get Started</button>
+          {isAuthenticated ? (
+            <>
+              <div className="flex items-center gap-3 px-2 py-1">
+                <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600">
+                  <User size={20} />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-neutral-900">{user?.name || 'User'}</p>
+                  <p className="text-xs text-neutral-500">{user?.email}</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => {
+                  onNavigate('projects');
+                  setIsMobileMenuOpen(false);
+                }}
+                className="text-lg font-medium text-neutral-900 text-left"
+              >
+                My Projects
+              </button>
+              <button 
+                onClick={() => {
+                  handleLogout();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="text-lg font-medium text-red-600 text-left flex items-center gap-2"
+              >
+                <LogOut size={20} />
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <>
+              <button 
+                onClick={() => {
+                  onNavigate('signin');
+                  setIsMobileMenuOpen(false);
+                }}
+                className="text-lg font-medium text-neutral-900 text-left"
+              >
+                Sign In
+              </button>
+              <button 
+                onClick={() => {
+                  onNavigate('signup');
+                  setIsMobileMenuOpen(false);
+                }}
+                className="text-lg font-medium bg-neutral-900 text-white text-center py-3 rounded-xl shadow-md"
+              >
+                Get Started
+              </button>
+            </>
+          )}
         </motion.div>
       )}
     </header>

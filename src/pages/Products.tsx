@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion';
-import { UploadCloud, Image as ImageIcon, Sparkles, Layers, Minimize, Scaling } from 'lucide-react';
+import { Image as ImageIcon, Sparkles, Layers, Minimize, Scaling, ArrowRight } from 'lucide-react';
+import { useAuthStore } from '../store/authStore';
+import { TransitionTester } from '../components/TransitionTester';
 
-export default function Products() {
+export default function Products({ onNavigate }: { onNavigate: (page: string) => void }) {
+  const { isAuthenticated } = useAuthStore();
   const features = [
     {
       title: "Temporal Transition",
@@ -42,55 +45,78 @@ export default function Products() {
           transition={{ duration: 0.5 }}
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-100 border border-neutral-200 text-neutral-600 text-sm mb-8">
-            <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
-            Workspace Active
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            Python AI Worker is Online (FastAPI)
           </div>
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
-            The <span className="gradient-text">Workspace</span>
+            Test the <span className="gradient-text">Virelo Engine</span>
           </h1>
           <p className="text-lg md:text-xl text-neutral-600 max-w-2xl mx-auto mb-12">
-            Upload your start and end frames. Our temporal engine handles everything between.
+            The full-stack AniDoc integration is complete. Pose in 3D, capture the structural sketch, and let the Python AI engine render the final animation.
           </p>
           
-          <button className="bg-neutral-900 text-white px-8 py-3 rounded-full font-medium hover:bg-neutral-800 transition-colors mb-16 shadow-md">
-            Sign in for full access
-          </button>
+          {isAuthenticated ? (
+            <button 
+              onClick={() => onNavigate('editor')}
+              className="bg-indigo-600 text-white px-8 py-3 rounded-full font-medium hover:bg-indigo-700 transition-colors mb-16 shadow-lg flex items-center gap-2 mx-auto ring-4 ring-indigo-600/20"
+            >
+              Test AI Integration in Editor <ArrowRight className="w-4 h-4" />
+            </button>
+          ) : (
+            <button 
+              onClick={() => onNavigate('signin')}
+              className="bg-neutral-900 text-white px-8 py-3 rounded-full font-medium hover:bg-neutral-800 transition-colors mb-16 shadow-md"
+            >
+              Sign in to Test AI Pipeline
+            </button>
+          )}
 
-          {/* Upload Area */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-            {/* Start Frame */}
+          {/* Workflow Pipeline Visualization */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center max-w-4xl mx-auto">
+            {/* Step 1: 3D Scene */}
             <motion.div 
               whileHover={{ scale: 1.02 }}
-              className="glass-card gradient-border-glow p-8 flex flex-col items-center justify-center min-h-[300px] cursor-pointer group bg-white shadow-sm"
+              className="glass-card gradient-border-glow p-6 flex flex-col items-center justify-center min-h-[250px] bg-white shadow-sm"
             >
-              <div className="w-16 h-16 rounded-full bg-neutral-50 border border-neutral-200 flex items-center justify-center mb-6 group-hover:bg-indigo-50 group-hover:border-indigo-200 transition-all">
-                <UploadCloud className="w-8 h-8 text-neutral-400 group-hover:text-indigo-500" />
+              <div className="w-16 h-16 rounded-full bg-neutral-50 border border-neutral-200 flex items-center justify-center mb-6 text-neutral-400">
+                <Layers className="w-8 h-8" />
               </div>
-              <p className="text-neutral-900 font-medium mb-2">Click or drag & drop</p>
-              <p className="text-sm text-neutral-500">PNG, JPG, WEBP up to 20MB</p>
-              <div className="mt-8 text-xs font-semibold uppercase tracking-wider text-neutral-500 bg-neutral-100 px-3 py-1 rounded-full">Start Frame</div>
+              <p className="text-neutral-900 font-medium mb-2">1. Pose in 3D Workspace</p>
+              <p className="text-sm text-neutral-500">Arrange shapes and use Onion Skinning.</p>
             </motion.div>
 
-            {/* End Frame */}
+            {/* Step 2: AI Processing */}
             <motion.div 
               whileHover={{ scale: 1.02 }}
-              className="glass-card gradient-border-glow p-8 flex flex-col items-center justify-center min-h-[300px] cursor-pointer group relative overflow-hidden bg-white shadow-sm"
+              className="glass-card gradient-border-glow p-6 flex flex-col items-center justify-center min-h-[250px] relative overflow-hidden bg-white shadow-sm border-indigo-100"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 z-0" />
-              <div className="z-10 w-16 h-16 rounded-full bg-neutral-50 border border-neutral-200 flex items-center justify-center mb-6 group-hover:bg-purple-50 group-hover:border-purple-200 transition-all">
-                <ImageIcon className="w-8 h-8 text-neutral-400 group-hover:text-purple-500" />
+              <div className="z-10 w-16 h-16 rounded-full bg-indigo-50 border border-indigo-200 flex items-center justify-center mb-6">
+                <Sparkles className="w-8 h-8 text-indigo-500 animate-pulse" />
               </div>
-              <p className="text-neutral-900 font-medium mb-2 z-10">Click or drag & drop</p>
-              <p className="text-sm text-neutral-500 z-10">PNG, JPG, WEBP up to 20MB</p>
-              <div className="mt-8 text-xs font-semibold uppercase tracking-wider text-neutral-500 bg-neutral-100 px-3 py-1 rounded-full z-10">End Frame</div>
+              <p className="text-neutral-900 font-medium mb-2 z-10">2. Request Generation</p>
+              <p className="text-sm text-neutral-500 z-10">FastAPI Worker interpolates via AniDoc.</p>
+            </motion.div>
+
+            {/* Step 3: Result */}
+            <motion.div 
+              whileHover={{ scale: 1.02 }}
+              className="glass-card gradient-border-glow p-6 flex flex-col items-center justify-center min-h-[250px] bg-white shadow-sm"
+            >
+              <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center mb-6 text-emerald-500">
+                <ImageIcon className="w-8 h-8" />
+              </div>
+              <p className="text-neutral-900 font-medium mb-2">3. Animation Returned</p>
+              <p className="text-sm text-neutral-500">5-second polling fetches the video.</p>
             </motion.div>
           </div>
           
           <div className="mt-8 flex items-center justify-center text-sm text-neutral-400 gap-2">
              <span className="w-4 h-px bg-neutral-200" />
-             → Upload both frames to enable generation
+             → Powered by Node.js + FastAPI + React
              <span className="w-4 h-px bg-neutral-200" />
           </div>
+          <TransitionTester onNavigate={onNavigate} />
         </motion.div>
       </section>
 

@@ -41,7 +41,7 @@ const fallbackArticles: NewsArticle[] = [
   {
     _id: '3',
     title: "Creator Spotlight: Digital Dreams",
-    excerpt: "A deep dive into how top studios are using TemporalAI to revolutionize their post-production workflow.",
+    excerpt: "A deep dive into how top studios are using Virelo to revolutionize their post-production workflow.",
     date: "2026-10-08",
     category: "Community",
     author: "Content Team",
@@ -50,7 +50,7 @@ const fallbackArticles: NewsArticle[] = [
   },
   {
     _id: '4',
-    title: "TemporalAI Raises $40M Series B",
+    title: "Virelo Raises $40M Series B",
     excerpt: "We're expanding our team and infrastructure to accelerate the development of next-gen creative tools.",
     date: "2026-10-05",
     category: "Announcements",
@@ -134,7 +134,7 @@ export default function News() {
                 Updates & <span className="gradient-text">Insights</span>
               </h1>
               <p className="text-lg text-neutral-600">
-                The latest news, engineering breakthroughs, and community highlights from the TemporalAI team.
+                The latest news, engineering breakthroughs, and community highlights from the Virelo team.
               </p>
             </div>
             

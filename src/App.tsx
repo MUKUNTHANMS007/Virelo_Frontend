@@ -9,8 +9,10 @@ import Projects from './pages/Projects';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import Editor from './pages/Editor';
+import ResultPage from './pages/ResultPage';
+import PricingPage from './pages/PricingPage';
 import { useAuthStore } from './store/authStore';
-import { Home as HomeIcon, Package, FileText, Newspaper, Users, LogIn, LogOut, LayoutDashboard, FolderOpen } from 'lucide-react';
+import { Home as HomeIcon, Package, FileText, Newspaper, Users, LogIn, LogOut, LayoutDashboard, FolderOpen, Sparkles } from 'lucide-react';
 
 export default function App() {
   const [activePage, setActivePage] = useState('products');
@@ -37,6 +39,7 @@ export default function App() {
   const navItems = [
     { name: 'Home', id: 'home', icon: HomeIcon },
     { name: 'Products', id: 'products', icon: Package },
+    { name: 'Pricing', id: 'pricing', icon: Sparkles },
     { name: 'Docs', id: 'docs', icon: FileText },
     { name: 'Editor', id: 'editor', icon: LayoutDashboard },
     { name: 'Projects', id: 'projects', icon: FolderOpen },
@@ -49,14 +52,16 @@ export default function App() {
 
   const renderContent = () => {
     switch (activePage) {
-      case 'home': return <Home />;
+      case 'home': return <Home onNavigate={setActivePage} />;
       case 'docs': return <Docs />;
-      case 'editor': return <Editor />;
+      case 'editor': return <Editor onNavigate={setActivePage} />;
       case 'news': return <News />;
-      case 'products': return <Products />;
+      case 'products': return <Products onNavigate={setActivePage} />;
       case 'projects': return <Projects onNavigate={setActivePage} />;
+      case 'pricing': return <PricingPage />;
       case 'signin': return <SignIn onNavigate={setActivePage} />;
       case 'signup': return <SignUp onNavigate={setActivePage} />;
+      case 'result': return <ResultPage onNavigate={setActivePage} />;
       default: return <Home />;
     }
   };
